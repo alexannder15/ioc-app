@@ -17,7 +17,7 @@ export default async function handler(
       `https://api.abuseipdb.com/api/v2/check?ipAddress=${ip}&maxAgeInDays=90`,
       {
         headers: {
-          Key: '673b76fb36714c2a41a73b11d30d91b2db2ea4d330e02aa7618a4ceff23e301e30afb0f8ddbb7d45'!,
+          Key: process.env.ABUSEIPDB_API_KEY!,
           Accept: 'application/json',
         },
       }

@@ -27,9 +27,7 @@ export default function ExportExcelComponent({ iocs }: { iocs: IiocItem[] }) {
   return (
     <>
       {/* <CSVLink style={{ textDecoration: 'none', color: '#fff' }} data={iocs}> */}
-      <Button variant='outline' onClick={handleDownload}>
-        Descargar CSV
-      </Button>
+      <Button onClick={handleDownload}>Descargar CSV</Button>
       {/* </CSVLink> */}
     </>
   );

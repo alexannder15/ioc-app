@@ -170,7 +170,6 @@ export default function IocPage() {
     );
 
     if (isExist) {
-      console.log('Ya existe el Ioc', item);
       toast.info(`🤔 Ya existe el Ioc! ${ioc} `, {
         position: 'top-right',
         autoClose: 5000,
@@ -272,12 +271,20 @@ export default function IocPage() {
       <div className='mt-5 mb-3 d-flex container'>
         <div>
           {showFormIoc && (
-            <Button name='showFormIoc' variant='link' onClick={handleWindow}>
+            <Button
+              variant={'outline'}
+              name='showFormIoc'
+              onClick={handleWindow}
+            >
               Ir a CSV archivo masivo
             </Button>
           )}
           {showFormCsvIoc && (
-            <Button name='showFormCsvIoc' variant='link' onClick={handleWindow}>
+            <Button
+              variant={'outline'}
+              name='showFormCsvIoc'
+              onClick={handleWindow}
+            >
               Ir a IOC uno a uno
             </Button>
           )}
@@ -320,7 +327,6 @@ export default function IocPage() {
           <div className='text-center'>
             <Button
               className='mb-3'
-              variant='outline'
               onClick={() => save(ioc)}
               disabled={buttonDisabled || ioc === ''}
             >

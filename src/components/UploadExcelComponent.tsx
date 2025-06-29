@@ -33,7 +33,6 @@ export default function UploadExcelComponent({
           skipEmptyLines: true,
           complete: function (results: Papa.ParseResult<any>) {
             // results.data is an array of arrays (or objects if header: true)
-            console.log('dataParse', results.data[0]);
             onFileSelectSuccess(results.data[0]);
           },
           error: function (error) {
@@ -74,8 +73,11 @@ export default function UploadExcelComponent({
           </p>
           <p>
             Consultar IOCs masivamente; el archivo no puede superar 1024 bytes.
-            <a href='/lib/iocs-example.csv' download>
-              {' '}
+            <a
+              href='/lib/iocs-example.csv'
+              download
+              className='text-blue-500 hover:underline ml-1'
+            >
               archivo ejemplo
             </a>
           </p>
@@ -92,26 +94,18 @@ export default function UploadExcelComponent({
             onChange={handleFileInput}
             accept='.csv'
           />
-          {/* <Form.Control
-            id='custom-file'
-            //label={name === '' ? 'Seleccionar archivo' : name}
-            //custom
-            onChange={handleFileInput}
-            accept='.csv'
-          /> */}
-        </div>
-        <div className='text-center'>
-          <Button
-            className='mb-3 mt-3'
-            variant='outline'
-            onClick={readFile}
-            disabled={disabledButton}
-          >
-            Consultar IOCs
-          </Button>
-          {alert && (
-            <AlertDismissibleExample errorMessage='Recuerde que el archivo no puede superar 1024 bytes.' />
-          )}
+          <div className='text-center'>
+            <Button
+              className='mb-3 mt-3'
+              onClick={readFile}
+              disabled={disabledButton}
+            >
+              Consultar
+            </Button>
+            {alert && (
+              <AlertDismissibleExample errorMessage='Recuerde que el archivo no puede superar 1024 bytes.' />
+            )}
+          </div>
         </div>
       </div>
     </>

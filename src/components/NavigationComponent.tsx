@@ -11,12 +11,12 @@ export default function NavigationComponent() {
       <NavigationMenu className='list-none'>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href='/ioc'>Ioc</Link>
+            <Link href='/ioc'>IOC</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href='/ip'>Ip</Link>
+            <Link href='/ip'>IP</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenu>

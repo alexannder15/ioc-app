@@ -235,7 +235,7 @@ export default function IpPage() {
 
     setIpsAbuseIp(ipsAbuseIp);
 
-    await axios;
+    // await axios;
     // .post('http://localhost:3000/api/v1/iocs', item)
     // .then((res) => console.log(res))
     // .catch((err) => console.log(err));
@@ -266,7 +266,7 @@ export default function IpPage() {
 
     setIpsVirusTotal(ipsVirusTotal);
 
-    await axios;
+    // await axios;
     // .post('http://localhost:3000/api/v1/iocs', item)
     // .then((res) => console.log(res))
     // .catch((err) => console.log(err));
@@ -276,7 +276,7 @@ export default function IpPage() {
 
   const submitAlienVaultIp = async (item: IipItemAlienvault) => {
     let ipItems: IipItemAlienvault[] = [];
-    let ips: any = JSON.parse(localStorage.getItem('ipsAlienvault') || '{}'); // await axios.get('http://localhost:3000/api/v1/iocs');
+    let ips: any = JSON.parse(localStorage.getItem('ipsAlienvault') || '{}');
     ipItems = ips;
     let isExist = ipItems.some((i) => i.ipAddress === item.ipAddress);
 
@@ -406,23 +406,22 @@ export default function IpPage() {
           <p className='text-center mb-4 text-5xl font-medium tracking-tight text-gray-900 dark:text-white'>
             Ingresar IP
           </p>
-          {/* <Form.Label>Consultar IPs una a una en AbuseIPDB</Form.Label> <br /> */}
-          <Label>
-            Formatos aceptados:{' '}
-            <small>
-              <b>IPv4</b>
-            </small>
-          </Label>
-
-          <Textarea
-            onChange={(e) => setIp(e.target.value)}
-            disabled={textareaDisabled}
-            //placeholder='Escribe tu IOC aquí.'
-            id='message'
-            className='mt-2 mb-2'
-          />
-
-          {/* <Form.Control
+          <p>Consultar IPs una a una en AbuseIPDB</p> <br />
+          <div className='grid w-full gap-3'>
+            <Label>
+              Formatos aceptados:{' '}
+              <small>
+                <b>IPv4</b>
+              </small>
+            </Label>
+            <Textarea
+              onChange={(e) => setIp(e.target.value)}
+              disabled={textareaDisabled}
+              placeholder='Escribe tu IP aquí.'
+              id='message'
+              className='mt-2 mb-2'
+            />
+            {/* <Form.Control
             style={{ fontSize: '30px' }}
             as='textarea'
             rows={2}
@@ -430,12 +429,12 @@ export default function IpPage() {
             size={'sm'}
             onChange={(e) => setIp(e.target.value)}
             disabled={textareaDisabled}
-          /> */}
+            /> */}
+          </div>
         </div>
         <div className='text-center'>
           <Button
             className='mb-3'
-            variant='outline'
             onClick={() => save(ip)}
             disabled={buttonDisabled || ip === ''}
           >
