@@ -108,7 +108,7 @@ export default function IpPage() {
     setTextareaDisabled(true);
 
     try {
-      const res = await fetch(`/api/abuseip?ip=1.2.3.4`);
+      const res = await fetch(`/api/abuseip?ip=${ip}`);
       const data = await res.json();
 
       // const fetchIpAbuseIp = await axios(

@@ -100,11 +100,18 @@ export default function IocPage() {
         sha256: path.sha256 ?? '',
         sha1: path.sha1 ?? '',
         md5: path.md5 ?? '',
-        mcafee: pathResults.McAfee.result ?? pathResults.McAfee.category ?? '',
+        mcafee:
+          pathResults.McAfeeD?.result ??
+          pathResults.McAfee?.result ??
+          pathResults.McAfeeD?.category ??
+          pathResults.McAfee?.category ??
+          '',
         engines: `${pathStats.malicious} / ${
           pathStats.malicious + pathStats.undetected
         }`,
       };
+
+      console.log('item', item);
 
       await submit(item);
     } catch (error: any) {
