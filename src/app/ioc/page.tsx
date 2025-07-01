@@ -92,9 +92,9 @@ export default function IocPage() {
       //   }
       // );
 
-      const path = data.data.data.attributes;
-      const pathResults = data.data.data.attributes.last_analysis_results;
-      const pathStats = data.data.data.attributes.last_analysis_stats;
+      const path = data.data.attributes;
+      const pathResults = data.data.attributes.last_analysis_results;
+      const pathStats = data.data.attributes.last_analysis_stats;
 
       // Success 🎉
       const item: IiocItem = {
@@ -111,8 +111,6 @@ export default function IocPage() {
           pathStats.malicious + pathStats.undetected
         }`,
       };
-
-      console.log('item', item);
 
       await submit(item);
     } catch (error: any) {
