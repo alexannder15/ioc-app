@@ -75,25 +75,26 @@ export default function IocPage() {
   };
 
   const save = async (hash: string) => {
-    //275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f
     const isValidHash = validateHash(hash);
     if (!isValidHash) return;
     setButtonDisabled(true);
     setTextareaDisabled(true);
     try {
-      //const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-      const fetchIoc = await axios(
-        `https://www.virustotal.com/api/v3/files/${hash}`,
-        {
-          headers: {
-            'x-apiKey': `${process.env.NEXT_PUBLIC_VIRUSTOTAL_API_KEY}`,
-          },
-        }
-      );
+      const res = await fetch(`/api/virustotal?hash=${hash}`);
+      const data = await res.json();
 
-      const path = fetchIoc.data.data.attributes;
-      const pathResults = fetchIoc.data.data.attributes.last_analysis_results;
-      const pathStats = fetchIoc.data.data.attributes.last_analysis_stats;
+      // const fetchIoc = await axios(
+      //   `https://www.virustotal.com/api/v3/files/${hash}`,
+      //   {
+      //     headers: {
+      //       'x-apiKey': `${process.env.NEXT_PUBLIC_VIRUSTOTAL_API_KEY}`,
+      //     },
+      //   }
+      // );
+
+      const path = data.data.data.attributes;
+      const pathResults = data.data.data.attributes.last_analysis_results;
+      const pathStats = data.data.data.attributes.last_analysis_stats;
 
       // Success 🎉
       const item: IiocItem = {
