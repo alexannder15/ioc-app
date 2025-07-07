@@ -80,7 +80,7 @@ export default function IocPage() {
     setButtonDisabled(true);
     setTextareaDisabled(true);
     try {
-      const res = await fetch(`/api/virustotal?hash=${hash}`);
+      const res = await fetch(`/api/virustotalfile?hash=${hash}`);
       const data = await res.json();
 
       // const fetchIoc = await axios(

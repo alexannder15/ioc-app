@@ -147,26 +147,31 @@ export default function IpPage() {
     }
 
     try {
-      let fetchIPVirusTotal = await axios(
-        `https://www.virustotal.com/api/v3/ip_addresses/${ip}`,
-        {
-          headers: {
-            'x-apiKey': `${process.env.NEXT_PUBLIC_VIRUSTOTAL_API_KEY}`,
-          },
-        }
-      );
+      const res = await fetch(`/api/virustotalip?ip=${ip}`);
+      const data = await res.json();
 
-      let data = fetchIPVirusTotal.data.data;
-      let data2 = Object.values(data.attributes.last_analysis_results);
-      let lastAnalysisStats = data.attributes.last_analysis_stats;
+      // let fetchIPVirusTotal = await axios(
+      //   `https://www.virustotal.com/api/v3/ip_addresses/${ip}`,
+      //   {
+      //     headers: {
+      //       'x-apiKey': `${process.env.NEXT_PUBLIC_VIRUSTOTAL_API_KEY}`,
+      //     },
+      //   }
+      // );
+
+      //let data = fetchIPVirusTotal.data.data;
+      let data2 = Object.values(data.data.attributes.last_analysis_results);
+      let lastAnalysisStats = data.data.attributes.last_analysis_stats;
       let malicious = data2.filter((x: any) => x.category === 'malicious');
 
       const item: IipItemVirusTotal = {
         reports: lastAnalysisStats.malicious,
         totalReports: data2.length,
-        ipAddress: data.id,
+        ipAddress: data.data.id,
         malicious,
       };
+
+      console.log('item', item);
 
       await submitVirusTotalIp(item);
     } catch (error) {
