@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none" role="img"
+    aria-label="IOC Analyzer illustration">
+    <defs>
+        <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0" stop-color="#7C3AED" />
+            <stop offset="1" stop-color="#06B6D4" />
+        </linearGradient>
+        <linearGradient id="g2" x1="0" x2="1">
+            <stop offset="0" stop-color="#60A5FA" />
+            <stop offset="1" stop-color="#A78BFA" />
+        </linearGradient>
+        <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="16" result="b" />
+            <feBlend in="SourceGraphic" in2="b" />
+        </filter>
+    </defs>
+
+    <!-- background subtle shapes -->
+    <rect width="1200" height="800" rx="24" fill="url(#g2)" opacity="0.08" />
+
+    <g transform="translate(140,120)">
+        <!-- main device -->
+        <rect x="180" y="80" width="520" height="320" rx="18" fill="#0F172A" stroke="rgba(255,255,255,0.06)" />
+        <rect x="210" y="110" width="460" height="240" rx="10" fill="url(#g1)" opacity="0.12" />
+
+        <!-- screen content: nodes and lines -->
+        <g transform="translate(240,140)" stroke="#DDEBF7" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" opacity="0.95">
+            <circle cx="40" cy="40" r="12" fill="#fff" opacity="0.18" />
+            <circle cx="160" cy="30" r="10" fill="#fff" opacity="0.22" />
+            <circle cx="300" cy="70" r="14" fill="#fff" opacity="0.2" />
+            <circle cx="100" cy="140" r="11" fill="#fff" opacity="0.18" />
+            <circle cx="260" cy="150" r="9" fill="#fff" opacity="0.2" />
+
+            <path d="M52 48 L150 36" stroke="url(#g1)" />
+            <path d="M168 44 L288 68" stroke="url(#g2)" />
+            <path d="M308 84 L264 146" stroke="#9FB7EF" />
+            <path d="M120 50 L104 132" stroke="#93C5FD" />
+        </g>
+
+        <!-- magnifier / analysis circle -->
+        <g transform="translate(80,260)">
+            <circle cx="0" cy="0" r="52" fill="#fff" opacity="0.06" />
+            <circle cx="0" cy="0" r="34" fill="url(#g1)" opacity="0.18" />
+            <rect x="36" y="36" width="72" height="10" rx="5" transform="rotate(45 36 36)" fill="#94A3B8"
+                opacity="0.8" />
+        </g>
+
+        <!-- small data cards -->
+        <g transform="translate(740,40)">
+            <rect x="0" y="0" width="200" height="96" rx="12" fill="#fff" opacity="0.06" />
+            <rect x="16" y="18" width="170" height="18" rx="6" fill="url(#g2)" opacity="0.14" />
+            <rect x="16" y="44" width="120" height="12" rx="6" fill="#ffffff" opacity="0.06" />
+            <rect x="16" y="64" width="80" height="10" rx="5" fill="#ffffff" opacity="0.04" />
+        </g>
+    </g>
+
+    <!-- accent circles -->
+    <circle cx="980" cy="120" r="64" fill="url(#g1)" opacity="0.06" filter="url(#soft)" />
+    <circle cx="140" cy="640" r="80" fill="url(#g2)" opacity="0.05" filter="url(#soft)" />
+
+    <!-- subtle grid lines -->
+    <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
+        <path d="M60 40 L1140 40 M60 120 L1140 120 M60 200 L1140 200 M60 280 L1140 280" />
+    </g>
+</svg>

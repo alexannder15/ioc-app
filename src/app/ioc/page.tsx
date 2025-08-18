@@ -5,142 +5,84 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import UploadExcelComponent from '@/components/UploadExcelComponent';
 import ExportExcelComponent from '@/components/ExportExcelComponent';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
-
-interface IiocItem {
-  sha256: any;
-  sha1: any;
-  md5: any;
-  mcafee: any;
-  engines: any;
-}
+import { IiocItem, VTFileResponse, VTFileAttributes } from '@/lib/types';
+import { getVTFile } from '@/lib/api';
+import IocTable from '@/components/tables/IocTable';
 
 export default function IocPage() {
   const baseUrtl = 'https://localhost:7015';
   const [iocs, setIocs] = useState<IiocItem[]>([]);
-  const [ioc, setIoc] = useState('');
-  const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [textareaDisabled, setTextareaDisabled] = useState(false);
-  const [show, setShow] = useState(false);
+  const [ioc, setIoc] = useState<string>('');
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+  const [textareaDisabled, setTextareaDisabled] = useState<boolean>(false);
 
-  // csv
-  const [iocsCsv, setIocsCsv] = useState([]);
-  // show component for only one IOC
-  const [showFormIoc, setShowFormIoc] = useState(true);
-  // show component for only CSV IOC
-  const [showFormCsvIoc, setShowFormCsvIoc] = useState(false);
+  const [iocsCsv, setIocsCsv] = useState<string[]>([]);
+  const [showFormIoc, setShowFormIoc] = useState<boolean>(true);
+  const [showFormCsvIoc, setShowFormCsvIoc] = useState<boolean>(false);
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const refresh = async () => {
-    let iocItems: IiocItem[] = [];
+    setLoading(true);
+    setError(null);
     try {
-      let data = await axios.get(`${baseUrtl}/api/ioc`);
-      iocItems = data.data;
-      setIocs(iocItems);
-    } catch (error) {
-      console.log(error);
+      const data = await axios.get<IiocItem[]>(`${baseUrtl}/api/ioc`);
+      setIocs(data.data ?? []);
+    } catch (err) {
+      console.log(err);
+      setError('Error loading IOCs');
+      toast.error('Error loading IOCs');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
-
-  const clearData = () => {
-    handleClose();
-    localStorage.clear();
-    refresh();
-  };
-
   const save = async (hash: string) => {
-    const isValidHash = validateHash(hash);
+    const isValidHash = isSHA256(hash) || isSHA1(hash) || isMD5(hash);
     if (!isValidHash) return;
     setButtonDisabled(true);
     setTextareaDisabled(true);
+
     try {
-      const res = await fetch(`/api/virustotalfile?hash=${hash}`);
-      const data = await res.json();
+      const data = (await getVTFile(hash)) as VTFileResponse;
+      const path = (data.data?.attributes ??
+        ({} as VTFileAttributes)) as VTFileAttributes;
+      const pathResults = path.last_analysis_results ?? {};
+      const pathStats = path.last_analysis_stats ?? {};
 
-      // const fetchIoc = await axios(
-      //   `https://www.virustotal.com/api/v3/files/${hash}`,
-      //   {
-      //     headers: {
-      //       'x-apiKey': `${process.env.NEXT_PUBLIC_VIRUSTOTAL_API_KEY}`,
-      //     },
-      //   }
-      // );
+      const mcafee =
+        pathResults['McAfeeD']?.result ??
+        pathResults['McAfee']?.result ??
+        pathResults['McAfeeD']?.category ??
+        pathResults['McAfee']?.category ??
+        '';
 
-      const path = data.data.attributes;
-      const pathResults = data.data.attributes.last_analysis_results;
-      const pathStats = data.data.attributes.last_analysis_stats;
-
-      // Success 🎉
       const item: IiocItem = {
-        sha256: path.sha256 ?? '',
-        sha1: path.sha1 ?? '',
-        md5: path.md5 ?? '',
-        mcafee:
-          pathResults.McAfeeD?.result ??
-          pathResults.McAfee?.result ??
-          pathResults.McAfeeD?.category ??
-          pathResults.McAfee?.category ??
-          '',
-        engines: `${pathStats.malicious} / ${
-          pathStats.malicious + pathStats.undetected
-        }`,
+        sha256: String(path.sha256 ?? ''),
+        sha1: String(path.sha1 ?? ''),
+        md5: String(path.md5 ?? ''),
+        mcafee: String(mcafee),
+        engines: `${Number(pathStats.malicious ?? 0)} / ${Number(
+          (pathStats.malicious ?? 0) + (pathStats.undetected ?? 0)
+        )}`,
       };
 
       await submit(item);
-    } catch (error: any) {
-      // Error 😨
-      console.log('error', error);
-      if (error?.response) {
-        /*
-         * The request was made and the server responded with a
-         * status code that falls out of the range of 2xx
-         */
-        console.log('error.response.data', error.response.data);
-        console.log('error.response.status', error.response.status);
-        console.log('error.response.headers', error.response.headers);
-      } else if (error?.request) {
-        /*
-         * The request was made but no response was received, `error.request`
-         * is an instance of XMLHttpRequest in the browser and an instance
-         * of http.ClientRequest in Node.js
-         */
-        console.log('error.request', error.request);
-      } else {
-        // Something happened in setting up the request and triggered an Error
-        console.log('error.message', error.message);
-      }
-      console.log('error', error);
-
-      // si no existe en virus total, solo agregar a lo último
-      let isSha256 = isSHA256(hash);
-      let isSha1 = isSHA1(hash);
-      let isMd5 = isMD5(hash);
+    } catch (err) {
+      console.log('error', err);
+      toast.error('Error fetching data from VirusTotal for the hash');
+      const isSha256 = isSHA256(hash);
+      const isSha1 = isSHA1(hash);
+      const isMd5 = isMD5(hash);
 
       const item: IiocItem = {
         sha256: isSha256 ? hash : '',
@@ -151,132 +93,64 @@ export default function IocPage() {
       };
 
       await submit(item);
+    } finally {
+      setIoc('');
+      setButtonDisabled(false);
+      setTextareaDisabled(false);
     }
-    setIoc('');
-    setButtonDisabled(false);
-    setTextareaDisabled(false);
-  };
-
-  // validar hash con regex
-  const validateHash = (hash: string): boolean => {
-    let isSha256 = isSHA256(hash);
-    let isSha1 = isSHA1(hash);
-    let isMd5 = isMD5(hash);
-    if (isSha256 || isSha1 || isMd5) return true;
-    else return false;
   };
 
   const submit = async (item: IiocItem) => {
-    let iocItems: IiocItem[] = [];
-    let iocs = await axios.get(`${baseUrtl}/api/ioc`);
-    iocItems = iocs.data;
-    let isExist = iocItems.some(
-      (i) =>
-        i.sha256 === item.sha256 && i.sha1 === item.sha1 && i.md5 === item.md5
-    );
+    try {
+      const res = await axios.get<IiocItem[]>(`${baseUrtl}/api/ioc`);
+      const iocItems = res.data ?? [];
+      const isExist = iocItems.some(
+        (i) =>
+          i.sha256 === item.sha256 && i.sha1 === item.sha1 && i.md5 === item.md5
+      );
 
-    if (isExist) {
-      toast.info(`🤔 Ya existe el Ioc! ${ioc} `, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return;
+      if (isExist) {
+        toast.info(`🤔 Ya existe el Ioc! ${ioc}`);
+        return;
+      }
+
+      await axios.post(`${baseUrtl}/api/ioc`, item);
+      refresh();
+    } catch (err) {
+      console.log(err);
+      toast.error('Error saving IOC');
     }
-
-    await axios
-      .post(`${baseUrtl}/api/ioc`, item)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-
-    refresh();
   };
 
-  // read file
   const readFile = () => {
-    iocsCsv.forEach((ioc) => {
-      save(ioc);
+    iocsCsv.forEach((row) => {
+      save(row);
     });
   };
 
-  const handleWindow = (e: any) => {
-    if (e.target.name === 'showFormIoc') {
+  const handleWindow = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const name = (e.currentTarget as HTMLButtonElement).name;
+    if (name === 'showFormIoc') {
       setShowFormIoc(false);
       setShowFormCsvIoc(true);
-    }
-    if (e.target.name === 'showFormCsvIoc') {
+    } else if (name === 'showFormCsvIoc') {
       setShowFormCsvIoc(false);
       setShowFormIoc(true);
     }
   };
 
-  const isSHA256 = (hash: string): boolean => {
-    const regexSHA256 = new RegExp('^[A-Fa-f0-9]{64}$');
-    let isSHA256 = regexSHA256.test(hash);
-    return isSHA256;
-  };
-
-  const isSHA1 = (hash: string): boolean => {
-    const regexSHA1 = new RegExp('^[a-fA-F0-9]{40}$');
-    let isSHA1 = regexSHA1.test(hash);
-    return isSHA1;
-  };
-
-  const isMD5 = (hash: string): boolean => {
-    const regexMD5 = new RegExp('^[a-f0-9]{32}$');
-    let isMD5 = regexMD5.test(hash);
-    return isMD5;
-  };
+  const isSHA256 = (hash: string): boolean => /^[A-Fa-f0-9]{64}$/.test(hash);
+  const isSHA1 = (hash: string): boolean => /^[a-fA-F0-9]{40}$/.test(hash);
+  const isMD5 = (hash: string): boolean => /^[a-f0-9]{32}$/.test(hash);
 
   return (
     <div className='container mx-auto'>
       <ToastContainer />
 
-      {/* Modal */}
-
-      {/* <Dialog open={show} onOpenChange={setShow}>
-        <DialogTrigger>Open</DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Eliminar datos</DialogTitle>
-            <DialogDescription>
-              Está seguro que desea eliminar los datos?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant='secondary' onClick={handleClose}>
-              Cancelar
-            </Button>
-            <Button variant='outline' onClick={clearData}>
-              Continuar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog> */}
-
-      {/* <Dialog show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Eliminar datos</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Está seguro que desea eliminar los datos?</Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button variant='primary' onClick={clearData}>
-            Continuar
-          </Button>
-        </Modal.Footer>
-      </Dialog> */}
-
       {/* navbar intern one IOC or IOCs CVS */}
       <div className='mt-5 mb-3 d-flex container'>
         <div>
-          {showFormIoc && (
+          {showFormIoc ? (
             <Button
               variant={'outline'}
               name='showFormIoc'
@@ -284,8 +158,7 @@ export default function IocPage() {
             >
               Ir a CSV archivo masivo
             </Button>
-          )}
-          {showFormCsvIoc && (
+          ) : (
             <Button
               variant={'outline'}
               name='showFormCsvIoc'
@@ -304,8 +177,8 @@ export default function IocPage() {
             <p className='text-center mb-4 text-5xl font-medium tracking-tight text-gray-900 dark:text-white'>
               Ingresar Indicador de Compromiso
             </p>
-            <p>Consultar IOCs uno a uno en Virus Total</p> <br />
-            <div className='grid w-full gap-3'>
+            <p>Consultar IOCs uno a uno en Virus Total</p>
+            <div className='grid w-full gap-3 mt-4'>
               <Label>
                 Formatos aceptados:{' '}
                 <small>
@@ -319,18 +192,9 @@ export default function IocPage() {
                 id='message'
                 className='mt-2 mb-2'
               />
-              {/* <Form.Control
-              style={{ fontSize: '30px' }}
-              as='textarea'
-              rows={2}
-              value={ioc}
-              size={'sm'}
-              onChange={(e) => setIoc(e.target.value)}
-              disabled={textareaDisabled}
-            /> */}
             </div>
           </div>
-          <div className='text-center'>
+          <div className='text-center mt-4'>
             <Button
               className='mb-3'
               onClick={() => save(ioc)}
@@ -342,25 +206,15 @@ export default function IocPage() {
         </div>
       )}
 
-      {/* Form two or more IOCs*/}
+      {/* Form two or more IOCs */}
       {showFormCsvIoc && (
         <UploadExcelComponent
-          onFileSelectSuccess={(file: any) => setIocsCsv(file)}
+          onFileSelectSuccess={(file) => setIocsCsv(file ?? [])}
           readFile={readFile}
         />
       )}
 
-      {/* Data table */}
       <div className='mb-3 mr-3 d-flex justify-end'>
-        <div>
-          {/* <Button
-            variant="danger"
-            onClick={handleShow}
-            disabled={iocs.length === 0}
-          >
-            Limpiar
-          </Button> */}
-        </div>
         <div
           className='ml-3'
           style={
@@ -370,37 +224,7 @@ export default function IocPage() {
           <ExportExcelComponent iocs={iocs} />
         </div>
       </div>
-      <div
-        className='container-fluid overflow-x-auto'
-        style={{ fontSize: '14px' }}
-      >
-        <Table>
-          <TableCaption>Una lista de tus IOCs recientes.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className='w-[100px]'>#</TableHead>
-              <TableHead>SHA256</TableHead>
-              <TableHead>SHA-1</TableHead>
-              <TableHead className='text-right'>MD5</TableHead>
-              <TableHead className='text-right'>McAfee</TableHead>
-              <TableHead className='text-right'>Motores</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          {iocs.map((el, i) => (
-            <TableBody key={i}>
-              <TableRow>
-                <TableCell className='font-medium'>{i + 1}</TableCell>
-                <TableCell>{el.sha256}</TableCell>
-                <TableCell>{el.sha1}</TableCell>
-                <TableCell className='text-right'>{el.md5}</TableCell>
-                <TableCell className='text-right'>{el.mcafee}</TableCell>
-                <TableCell className='text-right'>{el.engines}</TableCell>
-              </TableRow>
-            </TableBody>
-          ))}
-        </Table>
-      </div>
+      <IocTable iocs={iocs} loading={loading} error={error} />
     </div>
   );
 }

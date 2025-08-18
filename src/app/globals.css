@@ -78,38 +78,52 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* palette variables (defaults) */
+:root {
+  --theme-primary: oklch(0.205 0 0);
+  --theme-primary-foreground: oklch(0.985 0 0);
+
+  --theme-accent: oklch(0.97 0 0);
+  --theme-accent-foreground: oklch(0.205 0 0);
+
+  --theme-muted: oklch(0.97 0 0);
+  --theme-muted-foreground: oklch(0.556 0 0);
+
+  --theme-background: oklch(1 0 0);
+  --theme-foreground: oklch(0.145 0 0);
+
+  --theme-card: oklch(1 0 0);
+  --theme-card-foreground: oklch(0.145 0 0);
+
+  /* Convenience aliases used by rest of CSS */
+  --primary: var(--theme-primary);
+  --primary-foreground: var(--theme-primary-foreground);
+  --accent: var(--theme-accent);
+  --accent-foreground: var(--theme-accent-foreground);
+  --muted: var(--theme-muted);
+  --muted-foreground: var(--theme-muted-foreground);
+  --background: var(--theme-background);
+  --foreground: var(--theme-foreground);
+  --card: var(--theme-card);
+  --card-foreground: var(--theme-card-foreground);
+}
+
+/* you can reference these elsewhere if you want to theme components */
+
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* dark-mode palette base (these can still be overwritten by selected palette if desired) */
+  --theme-background: oklch(0.145 0 0);
+  --theme-foreground: oklch(0.985 0 0);
+
+  --theme-card: oklch(0.205 0 0);
+  --theme-card-foreground: oklch(0.985 0 0);
+
+  --primary: var(--theme-primary);
+  --primary-foreground: var(--theme-primary-foreground);
+  --accent: var(--theme-accent);
+  --accent-foreground: var(--theme-accent-foreground);
+  --muted: var(--theme-muted);
+  --muted-foreground: var(--theme-muted-foreground);
 }
 
 @layer base {

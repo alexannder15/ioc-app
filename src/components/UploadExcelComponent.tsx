@@ -5,57 +5,47 @@ import { Label } from './ui/label';
 import { Input } from '@/components/ui/input';
 import Papa from 'papaparse';
 
+type OnFileSelect = (row: string[] | null) => void;
+
 export default function UploadExcelComponent({
   onFileSelectSuccess,
   readFile,
 }: {
-  onFileSelectSuccess: any;
-  readFile: any;
+  onFileSelectSuccess: OnFileSelect;
+  readFile: () => void;
 }) {
-  const [disabledButton, setDisabledButton] = useState(true);
-  const [name, setName] = useState('');
-  const [alert, setAlert] = useState(false);
+  const [disabledButton, setDisabledButton] = useState<boolean>(true);
+  const [name, setName] = useState<string>('');
+  const [alert, setAlert] = useState<boolean>(false);
 
-  const handleFileInput = (e: any) => {
-    var files = e.target.files,
-      f = files[0];
+  const MAX_BYTES = 1_048_576; // 1 MB
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    const f = files?.[0];
     if (f) {
-      if (f.size > 1024) {
-        // 1 mb in Bites
+      if (f.size > MAX_BYTES) {
+        // file too large
         setDisabledButton(true);
         setAlert(true);
       } else {
         setName(f.name);
         setDisabledButton(false);
+        setAlert(false);
 
-        Papa.parse(f, {
-          header: false, // set to true if your CSV has headers
+        Papa.parse<string[]>(f, {
+          header: false,
           skipEmptyLines: true,
-          complete: function (results: Papa.ParseResult<any>) {
-            // results.data is an array of arrays (or objects if header: true)
-            onFileSelectSuccess(results.data[0]);
+          complete(results: Papa.ParseResult<string[]>) {
+            // return first row (array of IOC strings) or null
+            const firstRow = results.data?.[0] ?? null;
+            onFileSelectSuccess(firstRow);
           },
-          error: function (error) {
-            console.error('Error parsing CSV:', error);
+          error(err) {
+            console.error('Error parsing CSV:', err);
             onFileSelectSuccess(null);
           },
         });
-
-        // var reader = new FileReader();
-        // reader.onload = function (e: any) {
-        //   var data = e.target.result;
-        //   let readedData = XLSX.read(data, { type: 'binary' });
-        //   const wsname = readedData.SheetNames[0];
-        //   console.log('wsname', wsname);
-        //   const ws = readedData.Sheets[wsname];
-        //   console.log('ws', ws);
-
-        //   /* Convert array to json*/
-        //   const dataParse = XLSX.utils.sheet_to_json(ws, { header: 1 });
-        //   console.log('dataParse', dataParse[0]);
-        //   onFileSelectSuccess(dataParse[0]);
-        // };
-        // reader.readAsBinaryString(f);
       }
     } else {
       onFileSelectSuccess(null);
@@ -72,7 +62,7 @@ export default function UploadExcelComponent({
             Cargar archivo de Indicadores de Compromiso
           </p>
           <p>
-            Consultar IOCs masivamente; el archivo no puede superar 1024 bytes.
+            Consultar IOCs masivamente; el archivo no puede superar 1 MB.
             <a
               href='/lib/iocs-example.csv'
               download
@@ -103,7 +93,7 @@ export default function UploadExcelComponent({
               Consultar
             </Button>
             {alert && (
-              <AlertDismissibleExample errorMessage='Recuerde que el archivo no puede superar 1024 bytes.' />
+              <AlertDismissibleExample errorMessage='Recuerde que el archivo no puede superar 1 MB.' />
             )}
           </div>
         </div>
