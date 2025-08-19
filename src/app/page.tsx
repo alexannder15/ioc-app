@@ -33,14 +33,13 @@ export default function Page() {
             </div>
           </div>
 
-          <div className='w-full md:w-[420px] flex-shrink-0'>
+          <div className='relative w-full max-w-[420px] h-[300px]'>
             {/* static svg from public */}
             <Image
               src='/hero.svg'
               alt='IOC Analyzer illustration'
-              className='w-full h-auto rounded-md'
-              width={420}
-              height={300}
+              fill
+              priority
             />
           </div>
         </div>

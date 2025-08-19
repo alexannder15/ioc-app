@@ -60,23 +60,6 @@ const THEME_BASE: Record<'light' | 'dark', Record<string, string>> = {
   },
 };
 
-function readCookie(name: string) {
-  try {
-    if (typeof document === 'undefined') return null;
-    const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
-    return m ? decodeURIComponent(m[1]) : null;
-  } catch {
-    return null;
-  }
-}
-function setCookie(name: string, value: string) {
-  try {
-    document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${
-      60 * 60 * 24 * 365
-    }; SameSite=Lax`;
-  } catch {}
-}
-
 export default function ThemeProvider({
   children,
 }: {
@@ -84,16 +67,13 @@ export default function ThemeProvider({
 }) {
   const initialTheme =
     (typeof window !== 'undefined' && window.__INITIAL_THEME) ||
-    readCookie('theme') ||
     (typeof window !== 'undefined' ? localStorage.getItem('theme') : null) ||
     'light';
 
   const initialPalette =
-    readCookie('palette') ||
     (typeof window !== 'undefined'
       ? localStorage.getItem('palette')
-      : 'default') ||
-    'default';
+      : 'default') || 'default';
 
   const [theme, setTheme] = useState<Theme>(
     initialTheme === 'dark' ? 'dark' : 'light'
@@ -125,8 +105,7 @@ export default function ThemeProvider({
     try {
       localStorage.setItem('theme', theme);
     } catch {}
-
-    setCookie('theme', theme);
+    localStorage.setItem('theme', theme);
   }, [theme, palette]);
 
   useEffect(() => {
@@ -137,7 +116,7 @@ export default function ThemeProvider({
     try {
       localStorage.setItem('palette', palette);
     } catch {}
-    setCookie('palette', palette);
+    localStorage.setItem('palette', palette);
   }, [palette]);
 
   const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
