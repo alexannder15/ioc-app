@@ -16,11 +16,7 @@ export default function AbuseIpTable({ items }: { items: IipItemAbuseIp[] }) {
   return (
     <>
       <h2 className='text-left mt-4'>
-        <Image
-          alt=''
-          src='/lib/abuseipdb-logo.svg'
-          style={{ height: '40px' }}
-        />
+        <Image alt='' src='/lib/abuseipdb-logo.svg' height={40} width={40} />
         AbuseIPDB
       </h2>
 

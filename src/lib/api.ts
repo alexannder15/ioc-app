@@ -11,9 +11,9 @@ const client = axios.create({
   timeout: 10000, // 10s timeout
 });
 
-// attach public API key header if provided via NEXT_PUBLIC_VIRUSTOTAL_API_KEY
 client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const key = process.env.NEXT_PUBLIC_VIRUSTOTAL_API_KEY;
+  const key = process.env.VIRUSTOTAL_API_KEY;
+  alert(key);
   if (key) {
     // normalize headers to AxiosHeaders so we can call .set in a type-safe way
     if (!config.headers) {

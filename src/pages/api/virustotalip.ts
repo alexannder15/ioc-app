@@ -1,5 +1,3 @@
-// pages/api/virustotalip.ts
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type VirusTotalResponse = Record<string, unknown>;

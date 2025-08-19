@@ -1,5 +1,3 @@
-// pages/api/abuseip.ts
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type AbuseIpResponse = Record<string, unknown>;

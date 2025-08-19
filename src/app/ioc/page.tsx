@@ -13,7 +13,7 @@ import { getVTFile } from '@/lib/api';
 import IocTable from '@/components/tables/IocTable';
 
 export default function IocPage() {
-  const baseUrtl = 'https://localhost:7015';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const [iocs, setIocs] = useState<IiocItem[]>([]);
   const [ioc, setIoc] = useState<string>('');
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
@@ -34,7 +34,7 @@ export default function IocPage() {
     setLoading(true);
     setError(null);
     try {
-      const data = await axios.get<IiocItem[]>(`${baseUrtl}/api/ioc`);
+      const data = await axios.get<IiocItem[]>(`${baseUrl}/api/ioc`);
       setIocs(data.data ?? []);
     } catch (err) {
       console.log(err);
@@ -53,6 +53,7 @@ export default function IocPage() {
 
     try {
       const data = (await getVTFile(hash)) as VTFileResponse;
+      console.log('data', data);
       const path = (data.data?.attributes ??
         ({} as VTFileAttributes)) as VTFileAttributes;
       const pathResults = path.last_analysis_results ?? {};
@@ -101,7 +102,7 @@ export default function IocPage() {
 
   const submit = async (item: IiocItem) => {
     try {
-      const res = await axios.get<IiocItem[]>(`${baseUrtl}/api/ioc`);
+      const res = await axios.get<IiocItem[]>(`${baseUrl}/api/ioc`);
       const iocItems = res.data ?? [];
       const isExist = iocItems.some(
         (i) =>
@@ -113,7 +114,7 @@ export default function IocPage() {
         return;
       }
 
-      await axios.post(`${baseUrtl}/api/ioc`, item);
+      await axios.post(`${baseUrl}/api/ioc`, item);
       refresh();
     } catch (err) {
       console.log(err);

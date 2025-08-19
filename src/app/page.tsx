@@ -39,6 +39,8 @@ export default function Page() {
               src='/hero.svg'
               alt='IOC Analyzer illustration'
               className='w-full h-auto rounded-md'
+              width={420}
+              height={300}
             />
           </div>
         </div>
