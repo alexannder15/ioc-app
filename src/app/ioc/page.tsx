@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import UploadExcelComponent from '@/components/UploadExcelComponent';
@@ -26,11 +26,7 @@ export default function IocPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    refresh();
-  }, []);
-
-  const refresh = async () => {
+  const refresh = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -43,7 +39,11 @@ export default function IocPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [baseUrl]); // include anything refresh depends on
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
   const save = async (hash: string) => {
     const isValidHash = isSHA256(hash) || isSHA1(hash) || isMD5(hash);
