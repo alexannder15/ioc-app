@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { getVTIp, getAbuseIp, getAlienvault } from '@/lib/api';
 import {
@@ -15,6 +14,7 @@ import {
   AbuseIpApiData,
   VTIPResponse,
   AlienVaultResponse,
+  IPulseEntry,
 } from '@/lib/types';
 import IpTable from '@/components/tables/IpTable';
 
@@ -47,7 +47,6 @@ export default function IpPage() {
     } catch (err) {
       console.log('hydrate error', err);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const refresh = async () => {
@@ -126,7 +125,7 @@ export default function IpPage() {
           : 0;
       const pulseList =
         Array.isArray(pulseInfo) && pulseInfo.length > 1
-          ? (pulseInfo[1] as any[])
+          ? (pulseInfo[1] as IPulseEntry[])
           : [];
 
       const item: IipItemAlienvault = {

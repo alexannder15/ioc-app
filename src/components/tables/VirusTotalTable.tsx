@@ -9,6 +9,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { IipItemVirusTotal } from '@/lib/types';
+import Image from 'next/image';
 
 export default function VirusTotalTable({
   items,
@@ -18,7 +19,7 @@ export default function VirusTotalTable({
   return (
     <>
       <h2 className='text-left mt-4'>
-        <img alt='' src='/lib/vt_logo.svg' style={{ height: '30px' }} />
+        <Image alt='' src='/lib/vt_logo.svg' style={{ height: '30px' }} />
         Virus Total
       </h2>
       <Table>

@@ -16,7 +16,7 @@ function Consumer() {
 
 test('hydrates initial theme from window.__INITIAL_THEME and toggles', async () => {
   // simulate server set value
-  (window as any).__INITIAL_THEME = 'dark';
+  window.__INITIAL_THEME = 'dark';
   render(
     <ThemeProvider>
       <Consumer />

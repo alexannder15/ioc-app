@@ -8,6 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { IipItemAlienvault } from '@/lib/types';
+import Image from 'next/image';
 
 export default function AlienVaultTable({
   items,
@@ -17,7 +18,11 @@ export default function AlienVaultTable({
   return (
     <>
       <h2 className='text-left mt-4'>
-        <img alt='' src='/lib/OTX-logo-white.svg' style={{ height: '30px' }} />
+        <Image
+          alt=''
+          src='/lib/OTX-logo-white.svg'
+          style={{ height: '30px' }}
+        />
         Alien Vault OTX
       </h2>
       <Table>

@@ -6,7 +6,7 @@ export default function AlertDismissibleExample({
 }: {
   errorMessage: string;
 }) {
-  const [show, setShow] = useState(true);
+  const [show] = useState(true);
 
   if (show) {
     return (
@@ -15,11 +15,6 @@ export default function AlertDismissibleExample({
         <AlertTitle>Oh noo! Tiene un error!</AlertTitle>
         <AlertDescription>{errorMessage}</AlertDescription>
       </Alert>
-
-      //   <Alert variant='default | destructive' onClose={() => setShow(false)} dismissible>
-      //     <Alert.Heading>Oh noo! Tiene un error!</Alert.Heading>
-      //     <p> {errorMessage} </p>
-      //   </Alert>
     );
   }
   return <></>;

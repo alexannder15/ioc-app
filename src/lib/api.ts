@@ -19,7 +19,7 @@ client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     if (!config.headers) {
       config.headers = new AxiosHeaders();
     } else if (!(config.headers instanceof AxiosHeaders)) {
-      config.headers = new AxiosHeaders(config.headers as any);
+      config.headers = new AxiosHeaders(config.headers as AxiosHeaders);
     }
     (config.headers as AxiosHeaders).set('x-apiKey', key);
   }
@@ -37,7 +37,6 @@ async function getJson<T>(
   } catch (err) {
     // centralized logging; rethrow so callers can handle
     // ...you may extend with Sentry or more structured errors
-    // eslint-disable-next-line no-console
     console.error('[API] GET failed:', url, err);
     throw err;
   }

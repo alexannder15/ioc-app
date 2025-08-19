@@ -36,7 +36,7 @@ export default async function handler(
 
     const data = (await response.json()) as AbuseIpResponse;
     return res.status(response.status).json(data);
-  } catch (err) {
+  } catch {
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

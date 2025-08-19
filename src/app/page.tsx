@@ -1,5 +1,6 @@
 import './globals.css';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Page() {
   return (
@@ -34,7 +35,7 @@ export default function Page() {
 
           <div className='w-full md:w-[420px] flex-shrink-0'>
             {/* static svg from public */}
-            <img
+            <Image
               src='/hero.svg'
               alt='IOC Analyzer illustration'
               className='w-full h-auto rounded-md'

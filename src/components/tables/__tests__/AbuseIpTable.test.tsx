@@ -2,8 +2,9 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import AbuseIpTable from '../AbuseIpTable';
+import type { IipItemAbuseIp } from '@/lib/types';
 
-const sample = [
+const sample: IipItemAbuseIp[] = [
   {
     abuseConfidenceScore: 50,
     domain: 'example.com',
@@ -15,7 +16,7 @@ const sample = [
 ];
 
 test('renders AbuseIpTable rows', () => {
-  render(<AbuseIpTable items={sample as any} />);
+  render(<AbuseIpTable items={sample} />);
   expect(screen.getByText('AbuseIPDB')).toBeInTheDocument();
   expect(screen.getByText('1.2.3.4')).toBeInTheDocument();
 });

@@ -83,7 +83,7 @@ export default function ThemeProvider({
   children: React.ReactNode;
 }) {
   const initialTheme =
-    (typeof window !== 'undefined' && (window as any).__INITIAL_THEME) ||
+    (typeof window !== 'undefined' && window.__INITIAL_THEME) ||
     readCookie('theme') ||
     (typeof window !== 'undefined' ? localStorage.getItem('theme') : null) ||
     'light';
@@ -157,7 +157,7 @@ export function useTheme(): ThemeContextValue {
 
   // fallback: return safe defaults and no-op setters so components work outside provider
   const fallbackTheme: Theme =
-    typeof window !== 'undefined' && (window as any).__INITIAL_THEME === 'dark'
+    typeof window !== 'undefined' && window.__INITIAL_THEME === 'dark'
       ? 'dark'
       : 'light';
   const fallbackPalette =

@@ -13,7 +13,7 @@ export default function ThemePaletteSelector() {
   if (!themeCtx) return null; // defensive, though useTheme now returns a fallback
   const { palette, setPalette } = themeCtx;
 
-  const palettes: { key: any; label: string }[] = [
+  const palettes: { key: string; label: string }[] = [
     { key: 'default', label: 'Default' },
     { key: 'sunset', label: 'Sunset' },
     { key: 'ocean', label: 'Ocean' },
@@ -26,7 +26,7 @@ export default function ThemePaletteSelector() {
           key={p.key}
           variant={p.key === palette ? 'default' : 'ghost'}
           size='sm'
-          onClick={() => setPalette(p.key as any)}
+          onClick={() => setPalette(p.key as typeof palette)}
         >
           {p.label}
         </Button>

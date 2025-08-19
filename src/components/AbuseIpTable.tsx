@@ -9,12 +9,17 @@ import {
 } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
 import { IipItemAbuseIp } from '@/lib/types';
+import Image from 'next/image';
 
 export default function AbuseIpTable({ items }: { items: IipItemAbuseIp[] }) {
   return (
     <>
       <h2 className='text-left mt-4'>
-        <img alt='' src='/lib/abuseipdb-logo.svg' style={{ height: '40px' }} />
+        <Image
+          alt=''
+          src='/lib/abuseipdb-logo.svg'
+          style={{ height: '40px' }}
+        />
         AbuseIPDB
       </h2>
 

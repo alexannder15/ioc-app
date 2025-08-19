@@ -15,7 +15,7 @@ export default function UploadExcelComponent({
   readFile: () => void;
 }) {
   const [disabledButton, setDisabledButton] = useState<boolean>(true);
-  const [name, setName] = useState<string>('');
+  const [, setName] = useState<string>('');
   const [alert, setAlert] = useState<boolean>(false);
 
   const MAX_BYTES = 1_048_576; // 1 MB
