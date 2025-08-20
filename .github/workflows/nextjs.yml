@@ -29,6 +29,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug env
+        run: |
+          echo "NODE_ENV=$NODE_ENV"
+
       - name: Checkout
         uses: actions/checkout@v4
       - name: Detect package manager
