@@ -77,7 +77,6 @@ jobs:
         run: |
           ${{ steps.detect-package-manager.outputs.runner }} next build
         env:
-          PAGES_BASE_PATH: ${{ steps.setup_pages.outputs.base_path }}
           VIRUSTOTAL_API_KEY: ${{ secrets.VIRUSTOTAL_API_KEY }}
           ABUSEIPDB_API_KEY: ${{ secrets.ABUSEIPDB_API_KEY }}
           NEXT_PUBLIC_BASE_URL: ${{ vars.NEXT_PUBLIC_BASE_URL }}
