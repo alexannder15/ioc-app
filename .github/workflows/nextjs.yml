@@ -80,9 +80,6 @@ jobs:
           VIRUSTOTAL_API_KEY: ${{ secrets.VIRUSTOTAL_API_KEY }}
           ABUSEIPDB_API_KEY: ${{ secrets.ABUSEIPDB_API_KEY }}
           NEXT_PUBLIC_BASE_URL: ${{ vars.NEXT_PUBLIC_BASE_URL }}
-      - name: Debug env
-        run: |
-          echo ${{ github.env }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
