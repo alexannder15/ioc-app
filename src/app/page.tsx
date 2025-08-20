@@ -36,7 +36,7 @@ export default function Page() {
           <div className='relative w-full max-w-[420px] h-[300px]'>
             {/* static svg from public */}
             <Image
-              src='/hero.svg'
+              src='/ioc-app/hero.svg'
               alt='IOC Analyzer illustration'
               fill
               priority

@@ -19,7 +19,12 @@ export default function AlienVaultTable({
   return (
     <>
       <h2 className='text-left mt-4'>
-        <Image alt='' src='/lib/OTX-logo-white.svg' height={40} width={40} />
+        <Image
+          alt=''
+          src='/ioc-app/lib/OTX-logo-white.svg'
+          height={40}
+          width={40}
+        />
         Alien Vault OTX
       </h2>
       <Table>
