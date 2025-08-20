@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
   output: 'export',
 
   // GitHub Pages serves from a subpath: https://alexannder15.github.io/ioc-app/
-  basePath: isProd ? '/ioc-app' : '',
-  assetPrefix: isProd ? '/ioc-app/' : '',
+  basePath: isProd ? '/IOC_APP' : '',
+  assetPrefix: isProd ? '/IOC_APP/' : '',
 
   // Disable image optimization (since Vercel server isn’t available on GH Pages)
   images: {
