@@ -15,6 +15,7 @@ export default async function handler(
   }
 
   const apiKey = process.env.VIRUSTOTAL_API_KEY;
+  alert(apiKey);
   if (!apiKey) {
     return res.status(500).json({ error: 'VIRUSTOTAL_API_KEY not configured' });
   }

@@ -1,5 +1,5 @@
-import axios, { AxiosHeaders } from 'axios';
-import type { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import axios from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 import type {
   VTFileResponse,
   VTIPResponse,
@@ -9,21 +9,6 @@ import type {
 
 const client = axios.create({
   timeout: 10000, // 10s timeout
-});
-
-client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const key = process.env.VIRUSTOTAL_API_KEY;
-  alert(key);
-  if (key) {
-    // normalize headers to AxiosHeaders so we can call .set in a type-safe way
-    if (!config.headers) {
-      config.headers = new AxiosHeaders();
-    } else if (!(config.headers instanceof AxiosHeaders)) {
-      config.headers = new AxiosHeaders(config.headers as AxiosHeaders);
-    }
-    (config.headers as AxiosHeaders).set('x-apiKey', key);
-  }
-  return config;
 });
 
 // central helper to GET and return typed body
