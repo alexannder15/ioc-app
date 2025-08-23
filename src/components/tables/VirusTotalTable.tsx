@@ -19,7 +19,7 @@ export default function VirusTotalTable({
   return (
     <>
       <h2 className='text-left mt-4'>
-        <Image alt='' src='/ioc-app/lib/vt_logo.svg' height={40} width={40} />
+        <Image alt='' src='/lib/vt_logo.svg' height={40} width={40} />
         Virus Total
       </h2>
       <Table>
