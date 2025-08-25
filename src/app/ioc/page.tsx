@@ -35,7 +35,7 @@ export default function IocPage() {
     } catch (err) {
       console.log(err);
       setError('Error loading IOCs');
-      toast.error('Error loading IOCs');
+      toast.error('Error loading IOCs, por favor refresca la página');
     } finally {
       setLoading(false);
     }
