@@ -30,7 +30,7 @@ export interface IipItemAbuseIp {
   usageType?: string;
   isp: string | null;
   domain: string | null;
-  hostnames?: any[];
+  hostnames?: string[];
   isTor?: boolean;
   totalReports: number;
   lastReportedAt: number | null;
@@ -84,7 +84,7 @@ export interface AbuseIpApiData {
     usageType?: string;
     isp?: string;
     domain?: string;
-    hostnames?: any[];
+    hostnames?: string[];
     isTor?: boolean;
     totalReports?: number;
     numDistinctUsers?: number;
