@@ -71,14 +71,22 @@ export default function IpPage() {
       const abuse = (await getAbuseIp(ipToCheck)) as AbuseIpApiData;
       const d = abuse.data ?? {};
       const item: IipItemAbuseIp = {
-        abuseConfidenceScore: Number(d.abuseConfidenceScore ?? 0),
-        domain: d.domain ?? null,
         ipAddress: String(d.ipAddress ?? ipToCheck),
+        isPublic: d.isPublic ?? false,
+        ipVersion: d.ipVersion ?? 0,
+        isWhitelisted: d.isWhitelisted ?? null,
+        abuseConfidenceScore: Number(d.abuseConfidenceScore ?? 0),
+        countryCode: d.countryCode ?? '',
+        usageType: d.usageType ?? '',
         isp: d.isp ?? null,
+        domain: d.domain ?? null,
+        hostnames: d.hostnames ?? [],
+        isTor: d.isTor ?? false,
+        totalReports: Number(d.totalReports ?? 0),
         lastReportedAt: d.lastReportedAt
           ? Date.parse(String(d.lastReportedAt))
           : null,
-        totalReports: Number(d.totalReports ?? 0),
+        numDistinctUsers: d.numDistinctUsers ?? 0,
       };
       await submitAbuseIp(item);
     } catch (err) {

@@ -25,12 +25,20 @@ export default function AbuseIpTable({ items }: { items: IipItemAbuseIp[] }) {
         <TableHeader>
           <TableRow>
             <TableHead className='w-[100px]'>#</TableHead>
-            <TableHead>IpAddress</TableHead>
+            <TableHead>IPAddress</TableHead>
+            <TableHead>IsPublic</TableHead>
+            {/* <TableHead>IPVersion</TableHead> */}
+            <TableHead>Is WhiteList</TableHead>
             <TableHead>AbuseConfidenceScore</TableHead>
-            <TableHead className='text-right'>Domain</TableHead>
-            <TableHead className='text-right'>Isp</TableHead>
-            <TableHead className='text-right'>LastReportedAt</TableHead>
-            <TableHead className='text-right'>TotalReports</TableHead>
+            <TableHead>CountryCode</TableHead>
+            <TableHead>UsageType</TableHead>
+            <TableHead>Isp</TableHead>
+            <TableHead>Domain</TableHead>
+            <TableHead>Hostnames</TableHead>
+            <TableHead>IsTor</TableHead>
+            <TableHead>TotalReports</TableHead>
+            <TableHead>LastReportedAt</TableHead>
+            {/* <TableHead>NumDistinctUsers</TableHead> */}
           </TableRow>
         </TableHeader>
 
@@ -39,13 +47,21 @@ export default function AbuseIpTable({ items }: { items: IipItemAbuseIp[] }) {
             <TableRow>
               <TableCell className='font-medium'>{i + 1}</TableCell>
               <TableCell>{el.ipAddress}</TableCell>
+              <TableCell>{el.isPublic == true ? 'True' : 'False'}</TableCell>
+              {/* <TableCell>{el.ipVersion}</TableCell> */}
+              <TableCell>{el.isWhitelisted}</TableCell>
               <TableCell>
                 {el.abuseConfidenceScore}%
                 <Progress value={el.abuseConfidenceScore} />
               </TableCell>
-              <TableCell className='text-right'>{el.domain}</TableCell>
-              <TableCell className='text-right'>{el.isp}</TableCell>
-              <TableCell className='text-right'>
+              <TableCell>{el.countryCode}</TableCell>
+              <TableCell>{el.usageType}</TableCell>
+              <TableCell>{el.isp}</TableCell>
+              <TableCell>{el.domain}</TableCell>
+              <TableCell>{el.hostnames}</TableCell>
+              <TableCell>{el.isTor == true ? 'True' : 'False'}</TableCell>
+              <TableCell>{el.totalReports}</TableCell>
+              <TableCell>
                 {el.lastReportedAt !== null
                   ? new Intl.DateTimeFormat('es-CO', {
                       year: 'numeric',
@@ -54,7 +70,7 @@ export default function AbuseIpTable({ items }: { items: IipItemAbuseIp[] }) {
                     }).format(el.lastReportedAt)
                   : el.lastReportedAt}
               </TableCell>
-              <TableCell className='text-right'>{el.totalReports}</TableCell>
+              {/* <TableCell>{el.numDistinctUsers}</TableCell> */}
             </TableRow>
           </TableBody>
         ))}

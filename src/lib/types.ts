@@ -21,12 +21,20 @@ export interface VTFileResponse {
 }
 
 export interface IipItemAbuseIp {
-  abuseConfidenceScore: number;
-  domain: string | null;
   ipAddress: string;
+  isPublic?: boolean;
+  ipVersion?: number;
+  isWhitelisted?: boolean | null;
+  abuseConfidenceScore: number;
+  countryCode?: string;
+  usageType?: string;
   isp: string | null;
-  lastReportedAt: number | null;
+  domain: string | null;
+  hostnames?: any[];
+  isTor?: boolean;
   totalReports: number;
+  lastReportedAt: number | null;
+  numDistinctUsers?: number;
 }
 
 export interface VTIPAttributes {
@@ -67,12 +75,20 @@ export interface IipItemAlienvault {
 
 export interface AbuseIpApiData {
   data?: {
-    abuseConfidenceScore?: number;
-    domain?: string | null;
     ipAddress?: string;
-    isp?: string | null;
-    lastReportedAt?: string | null;
+    isPublic?: boolean;
+    ipVersion?: number;
+    isWhitelisted?: null;
+    abuseConfidenceScore?: number;
+    countryCode?: string;
+    usageType?: string;
+    isp?: string;
+    domain?: string;
+    hostnames?: any[];
+    isTor?: boolean;
     totalReports?: number;
+    numDistinctUsers?: number;
+    lastReportedAt?: null;
   };
 }
 
