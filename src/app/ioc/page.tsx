@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import UploadExcelComponent from '@/components/UploadExcelComponent';
 import ExportExcelComponent from '@/components/ExportExcelComponent';
@@ -49,6 +49,8 @@ export default function IocPage() {
     if (!isValidHash) return;
     setButtonDisabled(true);
     setTextareaDisabled(true);
+    setLoading(true);
+    setError(null);
 
     try {
       const data = (await getVTFile(hash)) as VTFileResponse;
@@ -77,24 +79,15 @@ export default function IocPage() {
       await submit(item);
     } catch (err) {
       console.log('error', err);
+      setError((prev) =>
+        prev ? `${prev}; VT error` : 'Error fetching VirusTotal Hash'
+      );
       toast.error('Error fetching data from VirusTotal for the hash');
-      const isSha256 = isSHA256(hash);
-      const isSha1 = isSHA1(hash);
-      const isMd5 = isMD5(hash);
-
-      const item: IiocItem = {
-        sha256: isSha256 ? hash : '',
-        sha1: isSha1 ? hash : '',
-        md5: isMd5 ? hash : '',
-        mcafee: '',
-        engines: '0 / 0',
-      };
-
-      await submit(item);
     } finally {
       setIoc('');
       setButtonDisabled(false);
       setTextareaDisabled(false);
+      setLoading(false);
     }
   };
 
