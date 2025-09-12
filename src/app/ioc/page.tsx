@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import UploadExcelComponent from '@/components/UploadExcelComponent';
 import ExportExcelComponent from '@/components/ExportExcelComponent';
@@ -13,7 +12,6 @@ import { getVTFile } from '@/lib/api';
 import IocTable from '@/components/tables/IocTable';
 
 export default function IocPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const [iocs, setIocs] = useState<IiocItem[]>([]);
   const [ioc, setIoc] = useState<string>('');
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
@@ -26,24 +24,25 @@ export default function IocPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const refresh = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await axios.get<IiocItem[]>(`${baseUrl}/api/ioc`);
-      setIocs(data.data ?? []);
-    } catch (err) {
-      console.log(err);
-      setError('Error loading IOCs');
-      toast.error('Error loading IOCs, por favor refresca la página');
-    } finally {
-      setLoading(false);
-    }
-  }, [baseUrl]); // include anything refresh depends on
-
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    // hydrate from localStorage on mount
+    try {
+      const storedIocs = JSON.parse(
+        localStorage.getItem('iocs') ?? '[]'
+      ) as IiocItem[];
+      setIocs(storedIocs);
+    } catch (err) {
+      console.log('hydrate error', err);
+    }
+  }, []);
+
+  const refresh = async () => {
+    try {
+      localStorage.setItem('iocs', JSON.stringify(iocs));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const save = async (hash: string) => {
     const isValidHash = isSHA256(hash) || isSHA1(hash) || isMD5(hash);
@@ -53,7 +52,6 @@ export default function IocPage() {
 
     try {
       const data = (await getVTFile(hash)) as VTFileResponse;
-      console.log('data', data);
       const path = (data.data?.attributes ??
         ({} as VTFileAttributes)) as VTFileAttributes;
       const pathResults = path.last_analysis_results ?? {};
@@ -102,11 +100,12 @@ export default function IocPage() {
 
   const submit = async (item: IiocItem) => {
     try {
-      const res = await axios.get<IiocItem[]>(`${baseUrl}/api/ioc`);
-      const iocItems = res.data ?? [];
-      const isExist = iocItems.some(
+      const stored = JSON.parse(
+        localStorage.getItem('iocs') ?? '[]'
+      ) as IiocItem[];
+      const isExist = stored.some(
         (i) =>
-          i.sha256 === item.sha256 && i.sha1 === item.sha1 && i.md5 === item.md5
+          i.md5 === item.md5 || i.sha1 === item.sha1 || i.sha256 === item.sha256
       );
 
       if (isExist) {
@@ -114,7 +113,7 @@ export default function IocPage() {
         return;
       }
 
-      await axios.post(`${baseUrl}/api/ioc`, item);
+      setIocs((prev) => [item, ...prev]);
       refresh();
     } catch (err) {
       console.log(err);
