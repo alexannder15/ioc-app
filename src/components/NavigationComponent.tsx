@@ -26,7 +26,7 @@ export default function NavigationComponent() {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <Link href='/ioc'>IOC</Link>
+                <Link href='/hash'>HASH</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>

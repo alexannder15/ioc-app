@@ -52,6 +52,7 @@ export interface IVTMaliciousEntry {
   engine_name?: string;
   category?: string;
 }
+
 export interface IipItemVirusTotal {
   reports: number;
   totalReports: number;

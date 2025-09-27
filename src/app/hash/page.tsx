@@ -169,7 +169,7 @@ export default function IocPage() {
             <p className='text-center mb-4 text-5xl font-medium tracking-tight text-gray-900 dark:text-white'>
               Ingresar Indicador de Compromiso
             </p>
-            <p>Consultar IOCs uno a uno en Virus Total</p>
+            <p>Consultar HASH uno a uno en Virus Total</p>
             <div className='grid w-full gap-3 mt-4'>
               <Label>
                 Formatos aceptados:{' '}

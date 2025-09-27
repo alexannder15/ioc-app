@@ -12,17 +12,17 @@ export default function Page() {
               IOC Analyzer
             </h1>
             <p className='text-lg text-muted-foreground mb-4'>
-              Quickly analyze IPs and IOCs using VirusTotal, AbuseIPDB and
+              Analice rápidamente IP y Hash usando VirusTotal, AbuseIPDB y
               AlienVault OTX.
             </p>
 
             {/* restored navigation links */}
             <div className='flex gap-3'>
               <Link
-                href='/ioc'
+                href='/hash'
                 className='inline-block px-4 py-2 rounded-md bg-primary text-primary-foreground'
               >
-                IOCs
+                Hash
               </Link>
               <Link
                 href='/ip'
