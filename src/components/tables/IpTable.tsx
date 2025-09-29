@@ -3,11 +3,7 @@ import AbuseIpTable from './AbuseIpTable';
 import VirusTotalTable from './VirusTotalTable';
 import AlienVaultTable from './AlienVaultTable';
 import Skeleton from './Skeleton';
-import {
-  IipItemAbuseIp,
-  IipItemVirusTotal,
-  IipItemAlienvault,
-} from '@/lib/types';
+import { AbuseIP, AlienVaultIP, VirusTotalIP } from '@/lib/types';
 import AlertDismissibleExample from '@/components/AlertDismissibleExample';
 
 export default function IpTable({
@@ -17,9 +13,9 @@ export default function IpTable({
   loading,
   error,
 }: {
-  ipsAbuseIp: IipItemAbuseIp[];
-  ipsVirusTotal: IipItemVirusTotal[];
-  ipsAlienvault: IipItemAlienvault[];
+  ipsAbuseIp: AbuseIP[];
+  ipsVirusTotal: VirusTotalIP[];
+  ipsAlienvault: AlienVaultIP[];
   loading: boolean;
   error?: string | null;
 }) {

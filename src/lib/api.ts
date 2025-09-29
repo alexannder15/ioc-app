@@ -2,9 +2,9 @@ import axios from 'axios';
 import type { AxiosRequestConfig } from 'axios';
 import type {
   VTFileResponse,
-  VTIPResponse,
-  AbuseIpApiData,
-  AlienVaultResponse,
+  AlienVaultIP,
+  VirusTotalIPData,
+  AbuseIPData,
 } from '@/lib/types';
 
 const client = axios.create({
@@ -33,19 +33,19 @@ export async function getVTFile(hash: string): Promise<VTFileResponse> {
   );
 }
 
-export async function getVTIp(ip: string): Promise<VTIPResponse> {
-  return getJson<VTIPResponse>(
+export async function getVirusTotalIp(ip: string): Promise<VirusTotalIPData> {
+  return getJson<VirusTotalIPData>(
     `/api/virustotalip?ip=${encodeURIComponent(ip)}`
   );
 }
 
-export async function getAbuseIp(ip: string): Promise<AbuseIpApiData> {
-  return getJson<AbuseIpApiData>(`/api/abuseip?ip=${encodeURIComponent(ip)}`);
+export async function getAbuseIp(ip: string): Promise<AbuseIPData> {
+  return getJson<AbuseIPData>(`/api/abuseip?ip=${encodeURIComponent(ip)}`);
 }
 
-export async function getAlienvault(ip: string): Promise<AlienVaultResponse> {
+export async function getAlienvault(ip: string): Promise<AlienVaultIP> {
   // calling OTX directly; axios will apply the timeout and throw on network errors
-  return getJson<AlienVaultResponse>(
+  return getJson<AlienVaultIP>(
     `https://otx.alienvault.com/api/v1/indicators/IPv4/${encodeURIComponent(
       ip
     )}/general`

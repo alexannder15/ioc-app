@@ -20,82 +20,277 @@ export interface VTFileResponse {
   data?: { id?: string; attributes?: VTFileAttributes };
 }
 
-export interface IipItemAbuseIp {
-  ipAddress: string;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// abuseip ip
+
+export interface AbuseIPData {
+  data?: AbuseIP;
+}
+
+export interface AbuseIP {
+  ipAddress?: string;
   isPublic?: boolean;
   ipVersion?: number;
-  isWhitelisted?: boolean | null;
-  abuseConfidenceScore: number;
+  isWhitelisted?: boolean;
+  abuseConfidenceScore?: number;
   countryCode?: string;
   usageType?: string;
-  isp: string | null;
-  domain: string | null;
+  isp?: string;
+  domain?: string;
   hostnames?: string[];
   isTor?: boolean;
-  totalReports: number;
-  lastReportedAt: number | null;
+  totalReports?: number;
   numDistinctUsers?: number;
+  lastReportedAt?: Date;
 }
 
-export interface VTIPAttributes {
-  last_analysis_results?: Record<
-    string,
-    { category?: string; engine_name?: string }
-  >;
-  last_analysis_stats?: { malicious?: number };
-}
-export interface VTIPResponse {
-  data?: { id?: string; attributes?: VTIPAttributes };
+/// virustotal ip
+
+export interface VirusTotalIPData {
+  data?: VirusTotalIP;
 }
 
-export interface IVTMaliciousEntry {
+export interface VirusTotalIP {
+  id?: string;
+  type?: string;
+  links?: Links;
+  attributes?: Attributes;
+}
+
+export interface Attributes {
+  last_analysis_date?: number;
+  whois?: string;
+  whois_date?: number;
+  continent?: string;
+  last_analysis_stats?: LastAnalysisStats;
+  asn?: number;
+  last_modification_date?: number;
+  country?: string;
+  network?: string;
+  tags?: any[];
+  total_votes?: TotalVotes;
+  last_analysis_results?: { [key: string]: LastAnalysisResult };
+  rdap?: Rdap;
+  regional_internet_registry?: string;
+  reputation?: number;
+  as_owner?: string;
+}
+
+export interface LastAnalysisResult {
+  method?: Method;
   engine_name?: string;
-  category?: string;
+  category?: Category;
+  result?: Result;
 }
 
-export interface IipItemVirusTotal {
-  reports: number;
-  totalReports: number;
-  ipAddress: string;
-  malicious: IVTMaliciousEntry[];
+export enum Category {
+  Harmless = 'harmless',
+  Malicious = 'malicious',
+  Undetected = 'undetected',
 }
 
-export interface IPulseEntry {
-  author: { username: string };
-  name: string;
-  description: string;
-  tags: string[];
-}
-export interface IipItemAlienvault {
-  ipAddress: string;
-  asn: string | number | null;
-  countryName: string | null;
-  pulseInfoCount: number;
-  pulseInfoList: IPulseEntry[];
+export enum Method {
+  Blacklist = 'blacklist',
 }
 
-export interface AbuseIpApiData {
-  data?: {
-    ipAddress?: string;
-    isPublic?: boolean;
-    ipVersion?: number;
-    isWhitelisted?: null;
-    abuseConfidenceScore?: number;
-    countryCode?: string;
-    usageType?: string;
-    isp?: string;
-    domain?: string;
-    hostnames?: string[];
-    isTor?: boolean;
-    totalReports?: number;
-    numDistinctUsers?: number;
-    lastReportedAt?: null;
-  };
+export enum Result {
+  Clean = 'clean',
+  Malware = 'malware',
+  Unrated = 'unrated',
 }
 
-export interface AlienVaultResponse {
+export interface LastAnalysisStats {
+  malicious?: number;
+  suspicious?: number;
+  undetected?: number;
+  harmless?: number;
+  timeout?: number;
+}
+
+export interface Rdap {
+  object_class_name?: string;
+  handle?: string;
+  start_address?: string;
+  end_address?: string;
+  ip_version?: string;
+  name?: string;
+  type?: string;
+  country?: string;
+  parent_handle?: string;
+  status?: string[];
+  links?: Link[];
+  notices?: Notice[];
+  events?: Event[];
+  rdap_conformance?: string[];
+  entities?: RdapEntity[];
+  port43?: string;
+  cidr0_cidrs?: Cidr0CIDR[];
+  remarks?: Notice[];
+  arin_originas0_originautnums?: any[];
+}
+
+export interface Cidr0CIDR {
+  v4prefix?: string;
+  length?: number;
+  v6prefix?: string;
+}
+
+export interface RdapEntity {
+  object_class_name?: string;
+  handle?: string;
+  vcard_array?: FluffyVcardArray[];
+  roles?: string[];
+  links?: Link[];
+  public_ids?: any[];
+  entities?: EntityEntity[];
+  remarks?: any[];
+  events?: any[];
+  as_event_actor?: any[];
+  status?: any[];
+  port43?: string;
+  networks?: any[];
+  autnums?: any[];
+  url?: string;
+  lang?: string;
+  rdap_conformance?: any[];
+}
+
+export interface EntityEntity {
+  object_class_name?: string;
+  handle?: string;
+  vcard_array?: PurpleVcardArray[];
+  roles?: string[];
+  links?: Link[];
+  public_ids?: any[];
+  entities?: any[];
+  remarks?: any[];
+  events?: any[];
+  as_event_actor?: any[];
+  status?: any[];
+  port43?: string;
+  networks?: any[];
+  autnums?: any[];
+  url?: string;
+  lang?: string;
+  rdap_conformance?: any[];
+}
+
+export interface Link {
+  href?: string;
+  rel?: string;
+  value?: string;
+  type?: Title;
+  title?: Title;
+  media?: string;
+  href_lang?: any[];
+}
+
+export enum Title {
+  ApplicationPDF = 'application/pdf',
+  ApplicationRdapJSON = 'application/rdap+json',
+  Empty = '',
+  TextHTML = 'text/html',
+}
+
+export interface PurpleVcardArray {
+  name?: string;
+  type?: Type;
+  values?: string[];
+  parameters?: PurpleParameters;
+}
+
+export interface PurpleParameters {}
+
+export enum Type {
+  Text = 'text',
+}
+
+export interface FluffyVcardArray {
+  name?: string;
+  type?: Type;
+  values?: string[];
+  parameters?: FluffyParameters;
+}
+
+export interface FluffyParameters {
+  label?: string[];
+  type?: string[];
+}
+
+export interface Event {
+  event_action?: string;
+  event_date?: Date;
+  event_actor?: string;
+  links?: any[];
+}
+
+export interface Notice {
+  title?: string;
+  description?: string[];
+  links?: Link[];
+  type?: string;
+}
+
+export interface TotalVotes {
+  harmless?: number;
+  malicious?: number;
+}
+
+export interface Links {
+  self?: string;
+}
+
+/// alienvault ip
+
+export interface AlienVaultIP {
+  whois?: string;
+  reputation?: number;
   indicator?: string;
-  asn?: string | number;
-  country_name?: string | null;
-  pulse_info?: unknown[];
+  type?: string;
+  type_title?: string;
+  base_indicator?: BaseIndicator;
+  pulse_info?: PulseInfo;
+  false_positive?: any[];
+  validation?: any[];
+  asn?: string;
+  city_data?: boolean;
+  city?: null;
+  region?: null;
+  continent_code?: string;
+  country_code3?: string;
+  country_code2?: string;
+  subdivision?: null;
+  latitude?: number;
+  postal_code?: null;
+  longitude?: number;
+  accuracy_radius?: number;
+  country_code?: string;
+  country_name?: string;
+  dma_code?: number;
+  charset?: number;
+  area_code?: number;
+  flag_url?: string;
+  flag_title?: string;
+  sections?: string[];
+}
+
+export interface BaseIndicator {}
+
+export interface PulseInfo {
+  count?: number;
+  pulses?: any[];
+  references?: any[];
+  related?: Related;
+}
+
+export interface Related {
+  alienvault?: Alienvault;
+  other?: Alienvault;
+}
+
+export interface Alienvault {
+  adversary?: any[];
+  malware_families?: any[];
+  industries?: any[];
 }

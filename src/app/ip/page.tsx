@@ -5,23 +5,20 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { getVTIp, getAbuseIp, getAlienvault } from '@/lib/api';
-import {
-  IipItemAbuseIp,
-  IipItemVirusTotal,
-  IipItemAlienvault,
-  IVTMaliciousEntry,
-  AbuseIpApiData,
-  VTIPResponse,
-  AlienVaultResponse,
-  IPulseEntry,
-} from '@/lib/types';
+import { getVirusTotalIp, getAbuseIp, getAlienvault } from '@/lib/api';
 import IpTable from '@/components/tables/IpTable';
+import {
+  AbuseIP,
+  AbuseIPData,
+  AlienVaultIP,
+  VirusTotalIP,
+  VirusTotalIPData,
+} from '@/lib/types';
 
 export default function IpPage() {
-  const [ipsAbuseIp, setIpsAbuseIp] = useState<IipItemAbuseIp[]>([]);
-  const [ipsVirusTotal, setIpsVirusTotal] = useState<IipItemVirusTotal[]>([]);
-  const [ipsAlienvault, setIpsAlienvault] = useState<IipItemAlienvault[]>([]);
+  const [ipsAbuseIp, setIpsAbuseIp] = useState<AbuseIP[]>([]);
+  const [ipsVirusTotal, setIpsVirusTotal] = useState<VirusTotalIP[]>([]);
+  const [ipsAlienvault, setIpsAlienvault] = useState<AlienVaultIP[]>([]);
   const [ip, setIp] = useState<string>('');
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
   const [textareaDisabled, setTextareaDisabled] = useState<boolean>(false);
@@ -33,14 +30,19 @@ export default function IpPage() {
     // hydrate from localStorage on mount
     try {
       const storedAbuse = JSON.parse(
-        localStorage.getItem('ipsAbuseIp') ?? '[]'
-      ) as IipItemAbuseIp[];
+        localStorage.getItem('AbuseIPs') ?? '[]'
+      ) as AbuseIP[];
       const storedVT = JSON.parse(
-        localStorage.getItem('ipsVirusTotal') ?? '[]'
-      ) as IipItemVirusTotal[];
+        localStorage.getItem('VirusTotalIPs') ?? '[]'
+      ) as VirusTotalIP[];
       const storedAV = JSON.parse(
-        localStorage.getItem('ipsAlienvault') ?? '[]'
-      ) as IipItemAlienvault[];
+        localStorage.getItem('AlienvaultIPs') ?? '[]'
+      ) as AlienVaultIP[];
+
+      console.log('storedAbuse', storedAbuse);
+      console.log('storedAbuse', storedVT);
+      console.log('storedAbuse', storedAV);
+
       setIpsAbuseIp(storedAbuse);
       setIpsVirusTotal(storedVT);
       setIpsAlienvault(storedAV);
@@ -51,9 +53,9 @@ export default function IpPage() {
 
   const refresh = async () => {
     try {
-      localStorage.setItem('ipsAbuseIp', JSON.stringify(ipsAbuseIp));
-      localStorage.setItem('ipsVirusTotal', JSON.stringify(ipsVirusTotal));
-      localStorage.setItem('ipsAlienvault', JSON.stringify(ipsAlienvault));
+      localStorage.setItem('AbuseIPs', JSON.stringify(ipsAbuseIp));
+      localStorage.setItem('VirusTotalIPs', JSON.stringify(ipsVirusTotal));
+      localStorage.setItem('AlienvaultIPs', JSON.stringify(ipsAlienvault));
     } catch (error) {
       console.log(error);
     }
@@ -68,27 +70,8 @@ export default function IpPage() {
 
     // AbuseIPDB via internal API
     try {
-      const abuse = (await getAbuseIp(ipToCheck)) as AbuseIpApiData;
-      const d = abuse.data ?? {};
-      const item: IipItemAbuseIp = {
-        ipAddress: String(d.ipAddress ?? ipToCheck),
-        isPublic: d.isPublic ?? false,
-        ipVersion: d.ipVersion ?? 0,
-        isWhitelisted: d.isWhitelisted ?? null,
-        abuseConfidenceScore: Number(d.abuseConfidenceScore ?? 0),
-        countryCode: d.countryCode ?? '',
-        usageType: d.usageType ?? '',
-        isp: d.isp ?? null,
-        domain: d.domain ?? null,
-        hostnames: d.hostnames ?? [],
-        isTor: d.isTor ?? false,
-        totalReports: Number(d.totalReports ?? 0),
-        lastReportedAt: d.lastReportedAt
-          ? Date.parse(String(d.lastReportedAt))
-          : null,
-        numDistinctUsers: d.numDistinctUsers ?? 0,
-      };
-      await submitAbuseIp(item);
+      const abuse = (await getAbuseIp(ipToCheck)) as AbuseIPData;
+      await submitAbuseIp(abuse.data ?? {});
     } catch (err) {
       console.log('abuse error', err);
       setError('Error fetching AbuseIPDB');
@@ -97,24 +80,11 @@ export default function IpPage() {
 
     // VirusTotal IP via internal API
     try {
-      const vt = (await getVTIp(ipToCheck)) as VTIPResponse;
-      const attrs = vt.data?.attributes ?? {};
-      const lastResults = attrs.last_analysis_results ?? {};
-      const values = Object.values(lastResults) as Array<
-        Record<string, unknown>
-      >;
-      const stats = attrs.last_analysis_stats ?? { malicious: 0 };
-      const malicious = values.filter(
-        (x) => (x as Record<string, unknown>).category === 'malicious'
-      ) as IVTMaliciousEntry[];
+      const virusTotal = (await getVirusTotalIp(ipToCheck)) as VirusTotalIPData;
 
-      const item: IipItemVirusTotal = {
-        reports: Number(stats.malicious ?? 0),
-        totalReports: values.length,
-        ipAddress: String(vt.data?.id ?? ipToCheck),
-        malicious,
-      };
-      await submitVirusTotalIp(item);
+      console.log('vt', virusTotal);
+
+      await submitVirusTotalIp(virusTotal.data ?? {});
     } catch (err) {
       console.log('vt ip error', err);
       setError((prev) =>
@@ -125,25 +95,8 @@ export default function IpPage() {
 
     // AlienVault OTX
     try {
-      const av = (await getAlienvault(ipToCheck)) as AlienVaultResponse;
-      const pulseInfo = av.pulse_info as unknown[] | undefined;
-      const pulseCount =
-        Array.isArray(pulseInfo) && pulseInfo.length > 0
-          ? (pulseInfo[0] as number)
-          : 0;
-      const pulseList =
-        Array.isArray(pulseInfo) && pulseInfo.length > 1
-          ? (pulseInfo[1] as IPulseEntry[])
-          : [];
-
-      const item: IipItemAlienvault = {
-        ipAddress: String(av.indicator ?? ipToCheck),
-        asn: av.asn ?? null,
-        countryName: av.country_name ?? null,
-        pulseInfoCount: Number(pulseCount),
-        pulseInfoList: pulseList,
-      };
-      await submitAlienVaultIp(item);
+      const alienVault = (await getAlienvault(ipToCheck)) as AlienVaultIP;
+      await submitAlienVaultIp(alienVault);
     } catch (err) {
       console.log('alienvault error', err);
       setError((prev) =>
@@ -158,10 +111,10 @@ export default function IpPage() {
     }
   };
 
-  const submitAbuseIp = async (item: IipItemAbuseIp) => {
+  const submitAbuseIp = async (item: AbuseIP) => {
     const stored = JSON.parse(
-      localStorage.getItem('ipsAbuseIp') ?? '[]'
-    ) as IipItemAbuseIp[];
+      localStorage.getItem('AbuseIPs') ?? '[]'
+    ) as AbuseIP[];
     const isExist = stored.some((i) => i.ipAddress === item.ipAddress);
 
     if (isExist) {
@@ -173,14 +126,17 @@ export default function IpPage() {
     refresh();
   };
 
-  const submitVirusTotalIp = async (item: IipItemVirusTotal) => {
+  const submitVirusTotalIp = async (item: VirusTotalIP) => {
+    console.log('submit vt', item);
     const stored = JSON.parse(
-      localStorage.getItem('ipsVirusTotal') ?? '[]'
-    ) as IipItemVirusTotal[];
-    const isExist = stored.some((i) => i.ipAddress === item.ipAddress);
+      localStorage.getItem('VirusTotalIPs') ?? '[]'
+    ) as VirusTotalIP[];
+
+    console.log('stored', stored);
+    const isExist = stored.some((i) => i.id === item.id);
 
     if (isExist) {
-      toast.info(`🤔 Ya existe la IP! ${item.ipAddress} en VirusTotal`);
+      toast.info(`🤔 Ya existe la IP! ${item.id} en VirusTotal`);
       return;
     }
 
@@ -188,14 +144,14 @@ export default function IpPage() {
     refresh();
   };
 
-  const submitAlienVaultIp = async (item: IipItemAlienvault) => {
+  const submitAlienVaultIp = async (item: AlienVaultIP) => {
     const stored = JSON.parse(
-      localStorage.getItem('ipsAlienvault') ?? '[]'
-    ) as IipItemAlienvault[];
-    const isExist = stored.some((i) => i.ipAddress === item.ipAddress);
+      localStorage.getItem('AlienvaultIPs') ?? '[]'
+    ) as AlienVaultIP[];
+    const isExist = stored.some((i) => i.indicator === item.indicator);
 
     if (isExist) {
-      toast.info(`🤔 Ya existe la IP! ${item.ipAddress} en AlienVault`);
+      toast.info(`🤔 Ya existe la IP! ${item.indicator} en AlienVault`);
       return;
     }
 
