@@ -62,11 +62,6 @@ export default function VirusTotalTable({
       </div>
 
       <Table>
-        <TableCaption>
-          Una lista de tus Virus Total recientes. Haz click en Details para ver
-          todo el JSON de la fila.
-        </TableCaption>
-
         <TableHeader>
           <TableRow>
             <TableHead className='w-[60px]'>#</TableHead>
