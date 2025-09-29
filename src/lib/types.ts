@@ -68,7 +68,7 @@ export interface Attributes {
   last_modification_date?: number;
   country?: string;
   network?: string;
-  tags?: any[];
+  tags?: any[]; // eslint-disable-line
   total_votes?: TotalVotes;
   last_analysis_results?: { [key: string]: LastAnalysisResult };
   rdap?: Rdap;
@@ -127,7 +127,7 @@ export interface Rdap {
   port43?: string;
   cidr0_cidrs?: Cidr0CIDR[];
   remarks?: Notice[];
-  arin_originas0_originautnums?: any[];
+  arin_originas0_originautnums?: any[]; // eslint-disable-line
 }
 
 export interface Cidr0CIDR {
@@ -142,18 +142,18 @@ export interface RdapEntity {
   vcard_array?: FluffyVcardArray[];
   roles?: string[];
   links?: Link[];
-  public_ids?: any[];
+  public_ids?: any[]; // eslint-disable-line
   entities?: EntityEntity[];
-  remarks?: any[];
-  events?: any[];
-  as_event_actor?: any[];
-  status?: any[];
+  remarks?: any[]; // eslint-disable-line
+  events?: any[]; // eslint-disable-line
+  as_event_actor?: any[]; // eslint-disable-line
+  status?: any[]; // eslint-disable-line
   port43?: string;
-  networks?: any[];
-  autnums?: any[];
+  networks?: any[]; // eslint-disable-line
+  autnums?: any[]; // eslint-disable-line
   url?: string;
   lang?: string;
-  rdap_conformance?: any[];
+  rdap_conformance?: any[]; // eslint-disable-line
 }
 
 export interface EntityEntity {
@@ -162,18 +162,18 @@ export interface EntityEntity {
   vcard_array?: PurpleVcardArray[];
   roles?: string[];
   links?: Link[];
-  public_ids?: any[];
-  entities?: any[];
-  remarks?: any[];
-  events?: any[];
-  as_event_actor?: any[];
-  status?: any[];
+  public_ids?: any[]; // eslint-disable-line
+  entities?: any[]; // eslint-disable-line
+  remarks?: any[]; // eslint-disable-line
+  events?: any[]; // eslint-disable-line
+  as_event_actor?: any[]; // eslint-disable-line
+  status?: any[]; // eslint-disable-line
   port43?: string;
-  networks?: any[];
-  autnums?: any[];
+  networks?: any[]; // eslint-disable-line
+  autnums?: any[]; // eslint-disable-line
   url?: string;
   lang?: string;
-  rdap_conformance?: any[];
+  rdap_conformance?: any[]; // eslint-disable-line
 }
 
 export interface Link {
@@ -183,7 +183,7 @@ export interface Link {
   type?: Title;
   title?: Title;
   media?: string;
-  href_lang?: any[];
+  href_lang?: any[]; // eslint-disable-line
 }
 
 export enum Title {
@@ -197,10 +197,8 @@ export interface PurpleVcardArray {
   name?: string;
   type?: Type;
   values?: string[];
-  parameters?: PurpleParameters;
+  parameters?: any; // eslint-disable-line
 }
-
-export interface PurpleParameters {}
 
 export enum Type {
   Text = 'text',
@@ -222,7 +220,7 @@ export interface Event {
   event_action?: string;
   event_date?: Date;
   event_actor?: string;
-  links?: any[];
+  links?: any[]; // eslint-disable-line
 }
 
 export interface Notice {
@@ -249,10 +247,10 @@ export interface AlienVaultIP {
   indicator?: string;
   type?: string;
   type_title?: string;
-  base_indicator?: BaseIndicator;
+  base_indicator?: any; // eslint-disable-line
   pulse_info?: PulseInfo;
-  false_positive?: any[];
-  validation?: any[];
+  false_positive?: any[]; // eslint-disable-line
+  validation?: any[]; // eslint-disable-line
   asn?: string;
   city_data?: boolean;
   city?: null;
@@ -275,12 +273,10 @@ export interface AlienVaultIP {
   sections?: string[];
 }
 
-export interface BaseIndicator {}
-
 export interface PulseInfo {
   count?: number;
-  pulses?: any[];
-  references?: any[];
+  pulses?: any[]; // eslint-disable-line
+  references?: any[]; // eslint-disable-line
   related?: Related;
 }
 
@@ -290,7 +286,7 @@ export interface Related {
 }
 
 export interface Alienvault {
-  adversary?: any[];
-  malware_families?: any[];
-  industries?: any[];
+  adversary?: any[]; // eslint-disable-line
+  malware_families?: any[]; // eslint-disable-line
+  industries?: any[]; // eslint-disable-line
 }

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -16,18 +16,6 @@ export default function AlienVaultTable({
 }: {
   items?: AlienVaultIP[];
 }) {
-  // derive pulse count per item (defensive)
-  const pulses = useMemo(() => {
-    return items.map((it, idx) => {
-      const pcount =
-        (it as any)?.pulseInfoCount ??
-        (it as any)?.pulse_info?.count ??
-        (it as any)?.pulse_info?.pulses?.length ??
-        0;
-      return { idx, label: it?.indicator ?? it?.type ?? `#${idx + 1}`, pcount };
-    });
-  }, [items]);
-
   const [rawOpen, setRawOpen] = useState<Record<number, boolean>>({});
 
   return (
@@ -53,12 +41,12 @@ export default function AlienVaultTable({
 
         {items.map((el, i) => {
           const pcount =
-            (el as any)?.pulseInfoCount ??
-            (el as any)?.pulse_info?.count ??
-            (el as any)?.pulse_info?.pulses?.length ??
+            (el as any)?.pulseInfoCount ?? // eslint-disable-line
+            (el as any)?.pulse_info?.count ?? // eslint-disable-line
+            (el as any)?.pulse_info?.pulses?.length ?? // eslint-disable-line
             0;
           const pulsesList =
-            (el as any)?.pulseInfoList ?? (el as any)?.pulse_info?.pulses ?? [];
+            (el as any)?.pulseInfoList ?? (el as any)?.pulse_info?.pulses ?? []; // eslint-disable-line
 
           return (
             <React.Fragment key={i}>
@@ -66,7 +54,9 @@ export default function AlienVaultTable({
                 <TableRow>
                   <TableCell>{i + 1}</TableCell>
                   <TableCell>
-                    {(el as any)?.ipAddress ?? (el as any)?.indicator ?? '-'}
+                    {
+                      (el as any)?.ipAddress ?? (el as any)?.indicator ?? '-' // eslint-disable-line
+                    }
                   </TableCell>
                   <TableCell>
                     {el?.country_name ??
@@ -95,23 +85,28 @@ export default function AlienVaultTable({
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {pulsesList.slice(0, 3).map((e: any, l: number) => (
-                            <TableRow key={l}>
-                              <TableCell>
-                                {e?.author?.username ?? e?.author}
-                              </TableCell>
-                              <TableCell>{e?.name ?? '-'}</TableCell>
-                              <TableCell className='max-w-[320px] truncate'>
-                                {' '}
-                                {e?.description ?? '-'}
-                              </TableCell>
-                              <TableCell>
-                                {Array.isArray(e?.tags)
-                                  ? e.tags.join(', ')
-                                  : String(e?.tags ?? '-')}
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                          {pulsesList.slice(0, 3).map(
+                            (
+                              e: any, // eslint-disable-line
+                              l: number
+                            ) => (
+                              <TableRow key={l}>
+                                <TableCell>
+                                  {e?.author?.username ?? e?.author}
+                                </TableCell>
+                                <TableCell>{e?.name ?? '-'}</TableCell>
+                                <TableCell className='max-w-[320px] truncate'>
+                                  {' '}
+                                  {e?.description ?? '-'}
+                                </TableCell>
+                                <TableCell>
+                                  {Array.isArray(e?.tags)
+                                    ? e.tags.join(', ')
+                                    : String(e?.tags ?? '-')}
+                                </TableCell>
+                              </TableRow>
+                            )
+                          )}
                         </TableBody>
                       </Table>
                     )}

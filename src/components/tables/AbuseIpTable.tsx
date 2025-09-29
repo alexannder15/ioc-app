@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -13,16 +13,6 @@ import { AbuseIP } from '@/lib/types';
 import Image from 'next/image';
 
 export default function AbuseIpTable({ items = [] }: { items?: AbuseIP[] }) {
-  // aggregates for usageType pie
-  const usageAgg = useMemo(() => {
-    const map = new Map<string, number>();
-    items.forEach((it) => {
-      const k = it?.usageType ?? 'unknown';
-      map.set(k, (map.get(k) ?? 0) + 1);
-    });
-    return Array.from(map.entries()).sort((a, b) => b[1] - a[1]);
-  }, [items]);
-
   const [rawOpen, setRawOpen] = useState<Record<number, boolean>>({});
 
   return (

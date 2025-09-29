@@ -19,9 +19,6 @@ export default function VirusTotalTable({
   // debug: helps confirm items are arriving and their shape (browser console)
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    // eslint-disable-next-line no-console
-    console.log('VirusTotalTable items', items);
-    // eslint-disable-next-line no-console
     console.debug(
       'VirusTotalTable items count',
       items?.length ?? 0,
@@ -42,7 +39,9 @@ export default function VirusTotalTable({
   const fmtDate = (ts?: number) =>
     ts ? new Date(ts * 1000).toLocaleString() : '-';
 
-  const renderPrimitiveList = (pairs: [string, any][]) => (
+  const renderPrimitiveList = (
+    pairs: [string, any][] // eslint-disable-line
+  ) => (
     <ul className='grid grid-cols-2 gap-x-4 gap-y-1 text-xs'>
       {pairs.map(([k, v]) => (
         <li key={k} className='flex gap-2'>
@@ -64,8 +63,8 @@ export default function VirusTotalTable({
 
       <Table>
         <TableCaption>
-          Una lista de tus Virus Total recientes. Haz click en "Details" para
-          ver todo el JSON de la fila.
+          Una lista de tus Virus Total recientes. Haz click en Details para ver
+          todo el JSON de la fila.
         </TableCaption>
 
         <TableHeader>
@@ -103,7 +102,11 @@ export default function VirusTotalTable({
               const totalVotes = el?.attributes?.total_votes;
               const reputation = el?.attributes?.reputation ?? '-';
               // general primitives to show at glance
-              const generalPairs: [string, any][] = [
+
+              const generalPairs: [
+                string,
+                any // eslint-disable-line
+              ][] = [
                 ['asn', el?.attributes?.asn ?? '-'],
                 ['as_owner', el?.attributes?.as_owner ?? '-'],
                 ['network', el?.attributes?.network ?? '-'],
