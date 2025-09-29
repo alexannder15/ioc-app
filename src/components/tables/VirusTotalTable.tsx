@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -61,6 +62,7 @@ export default function VirusTotalTable({
       </div>
 
       <Table>
+        <TableCaption>Una lista de tus Virus Total recientes.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className='w-[60px]'>#</TableHead>
